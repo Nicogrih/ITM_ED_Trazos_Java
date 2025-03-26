@@ -19,18 +19,34 @@ public class FrmTrazos extends JPanel {
         JComboBox<String> selectorFiguras = new JComboBox<>(opciones);
         selectorFiguras.addActionListener(e -> tipoSeleccionado = (String) selectorFiguras.getSelectedItem());
 
-        // Botones
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCargar = new JButton("Cargar");
-        JButton btnSeleccionar = new JButton("Seleccionar");
-        JButton btnEliminar = new JButton("Eliminar");
+        // Botones con imágenes y fondo
+        JButton btnGuardar = new JButton(new ImageIcon(getClass().getResource("/imagenes/guardar.png")));
+        JButton btnCargar = new JButton(new ImageIcon(getClass().getResource("/imagenes/cargar.png")));
+        JButton btnSeleccionar = new JButton(new ImageIcon(getClass().getResource("/imagenes/seleccionar.png")));
+        JButton btnEliminar = new JButton(new ImageIcon(getClass().getResource("/imagenes/eliminar.png")));
+
+        Color fondoBoton = new Color(50, 50, 50);
+        btnGuardar.setBackground(fondoBoton);
+        btnCargar.setBackground(fondoBoton);
+        btnSeleccionar.setBackground(fondoBoton);
+        btnEliminar.setBackground(fondoBoton);
+
+        btnGuardar.setOpaque(true);
+        btnCargar.setOpaque(true);
+        btnSeleccionar.setOpaque(true);
+        btnEliminar.setOpaque(true);
+
+        btnGuardar.setContentAreaFilled(true);
+        btnCargar.setContentAreaFilled(true);
+        btnSeleccionar.setContentAreaFilled(true);
+        btnEliminar.setContentAreaFilled(true);
 
         btnGuardar.addActionListener(e -> guardarDibujo());
         btnCargar.addActionListener(e -> cargarDibujo());
         btnSeleccionar.addActionListener(e -> JOptionPane.showMessageDialog(null, "Haz clic en un trazo para seleccionarlo."));
         btnEliminar.addActionListener(e -> eliminarTrazo());
 
-        // Panel de botones
+        // Panel de botones en la parte superior
         JPanel panelBotones = new JPanel();
         panelBotones.add(new JLabel("Figura:"));
         panelBotones.add(selectorFiguras);
@@ -43,8 +59,8 @@ public class FrmTrazos extends JPanel {
         JFrame ventana = new JFrame("Editor de Dibujos");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLayout(new BorderLayout());
+        ventana.add(panelBotones, BorderLayout.NORTH);
         ventana.add(this, BorderLayout.CENTER);
-        ventana.add(panelBotones, BorderLayout.SOUTH);
         ventana.pack();
         ventana.setVisible(true);
 
@@ -104,11 +120,9 @@ public class FrmTrazos extends JPanel {
     }
 
     private void cargarDibujo() {
-        JFileChooser fileChooser = new JFileChooser();
-        int seleccion = fileChooser.showOpenDialog(this);
-        if (seleccion == JFileChooser.APPROVE_OPTION) {
-            File archivo = fileChooser.getSelectedFile();
-            if (lista.cargarDibujo(archivo.getAbsolutePath())) {
+        String nombreArchivo = JOptionPane.showInputDialog("Ingrese el nombre del archivo:");
+        if (nombreArchivo != null && !nombreArchivo.trim().isEmpty()) {
+            if (lista.cargarDibujo(nombreArchivo)) {
                 JOptionPane.showMessageDialog(null, "Dibujo cargado exitosamente.");
                 repaint();
             } else {
